@@ -1,6 +1,6 @@
 use crate::command;
 use command::Command;
-use std::{collections::HashMap, fs::File, alloc::System, process::exit};
+use std::{collections::HashMap, fs::File, process::exit, io};
 
 
 pub struct CommandManager {
@@ -10,10 +10,27 @@ pub struct CommandManager {
 
 impl CommandManager {
     pub fn new(read_path: &String) -> Self {
-        let commands = read_commands(read_path);
+        let read_result = match read_commands(read_path) {
+            Ok(map) => map,
+            Err(e) => {
+                match e.kind() {
+                    io::ErrorKind::NotFound => {
+                        println!("[error] 配置文件不存在!");
+                    },
+                    io::ErrorKind::InvalidData => {
+                        println!("[error] 配置文件解析失败!");
+                    },
+                    _ => {
+                        panic!("{:?}", e)
+                    }
+                };
+                // 退出程序
+                exit(0);
+            }
+        };
 
         CommandManager { 
-            commands: commands, 
+            commands: read_result, 
             path: read_path.clone()
         }
     }
@@ -29,24 +46,11 @@ impl CommandManager {
 
 
 // https://www.qttc.net/509-rust-parse-json.html
-fn read_commands(path: &String) -> HashMap<String, Command> {
+fn read_commands(path: &String) -> Result<HashMap<String, Command>, io::Error> {
     // 1. 打开文件
-    let file_data = match File::open(path) {
-        Ok(f) => f,
-        Err(_) => {
-            println!("配置文件不存在!");
-            exit(-1);
-        }
-    };
-
+    let file_data = File::open(path)?;
     // 2. 解析为Json对象
-    let json_object: serde_json::Value = match serde_json::from_reader(file_data) {
-        Ok(object) => object,
-        Err(_) => {
-            println!("配置文件解析失败!");
-            return HashMap::new();
-        }
-    };
+    let json_object: serde_json::Value = serde_json::from_reader(file_data)?;
     
     // 3. 解析json对象
     let mut cmds_map = HashMap::new();
@@ -54,13 +58,11 @@ fn read_commands(path: &String) -> HashMap<String, Command> {
     for cmd_value in cmd_values {
         let cmd: Command = match serde_json::from_value(cmd_value.clone()) {
             Ok(cmd) => cmd,
-            Err(e) => {
-                return HashMap::new();
-            }
+            Err(_) => continue
         };
         cmds_map.insert(cmd.name().clone(), cmd);
     }
 
-    cmds_map
+    Ok(cmds_map)
 }
 
