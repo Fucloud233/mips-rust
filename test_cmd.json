@@ -1,0 +1,14 @@
+[
+    {
+        "cmd_type": "R",
+        "id": 12,
+        "name": "syscall",
+        "parts": []
+    },
+    {
+        "cmd_type": "R",
+        "id": 32,
+        "name": "add",
+        "parts": ["RD", "RS", "RT"]
+    }
+]
