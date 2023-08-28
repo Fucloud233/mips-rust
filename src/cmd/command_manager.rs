@@ -1,6 +1,5 @@
-use crate::command;
-use command::Command;
 use std::{collections::HashMap, fs::File, process::exit, io};
+use super::command::Command;
 
 
 pub struct CommandManager {

@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use lazy_static::lazy_static;
 use serde::Deserialize;
 
-// 
 #[derive(Hash, Eq, PartialEq, Debug, Deserialize)]
 // #[serde(untagged)]
 pub enum CommandPart {
@@ -17,6 +16,16 @@ pub enum CommandPart {
 struct CommandPartInfo {
     length: u8,
     offset: u8,
+}
+
+impl CommandPartInfo{
+    pub fn length(&self) -> u8 {
+        self.length
+    }
+
+    pub fn offset(&self) -> u8 {
+        self.offset
+    }
 }
 
 lazy_static! {
@@ -35,46 +44,6 @@ fn init_command_parts() -> HashMap<CommandPart, CommandPartInfo> {
     command_parts
 }
 
-// 指令类型
-#[derive(Debug, Deserialize)]
-pub enum CommandType {
-	R, I, J
-}
-
-
-#[derive(Debug, Deserialize)]
-pub struct Command {
-    cmd_type: CommandType,
-    id: u8,
-    name: String,
-    parts: Vec<CommandPart>,
-    #[serde(default = "init_nums_vec")]
-    nums: Vec<u8>
-}
-
-fn init_nums_vec() -> Vec<u8> {
-    vec![]
-}
-
-impl Command {
-    pub fn new(cmd_type: CommandType, 
-        name: String, 
-        id: u8,
-        parts: Vec<CommandPart>, 
-        nums: Vec<u8>) -> Self {
-
-        return Command { cmd_type, id, name, parts, nums }
-    }
-
-    pub fn name(&self) -> &String {
-        &self.name
-    }
-
-    pub fn id(&self) -> u8 {
-        self.id
-    }
-
-    pub fn parts(&self) -> &Vec<CommandPart> {
-        &self.parts
-    }
-}
+pub fn get_cmd_part_info(part_type: &CommandPart) -> Option<&CommandPartInfo> {
+    CommandParts.get(part_type)
+} 
