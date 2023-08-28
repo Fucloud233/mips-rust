@@ -21,7 +21,7 @@ fn new_cmd() {
 fn read_cmd() {
     // 1. 测试读取指令
     let data_path = "./test_cmd.json".to_string();
-    let manager = CommandManager::new(&data_path);
+    let manager = CommandManager::new(&data_path).unwrap();
     assert_eq!(manager.cmd_num(), 2);
 
     // 2. 测试读取指令内容1

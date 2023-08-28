@@ -1,44 +1,35 @@
-use std::{collections::HashMap, fs::File, process::exit, io};
+use std::{collections::HashMap, fs::File, io};
 use super::command::Command;
 
 
 pub struct CommandManager {
     commands: HashMap<String, Command>,
-    path: String, 
+    // path: String, 
 }
 
 impl CommandManager {
-    pub fn new(read_path: &String) -> Self {
-        let read_result = match read_commands(read_path) {
-            Ok(map) => map,
-            Err(e) => {
-                match e.kind() {
-                    io::ErrorKind::NotFound => {
-                        println!("[error] 配置文件不存在!");
-                    },
-                    io::ErrorKind::InvalidData => {
-                        println!("[error] 配置文件解析失败!");
-                    },
-                    _ => {
-                        panic!("{:?}", e)
-                    }
-                };
-                // 退出程序
-                exit(0);
-            }
-        };
+    // CommandManager在新建之后 就会读取配置文件
+    // 可能会遇到以下错误
+    // 1. NotFound: 配置文件不存在
+    // 2. InvalidData: 配置文件解析失败
+    pub fn new(read_path: &String) -> Result<Self, io::Error> {
+        let read_result = read_commands(read_path)?;
 
-        CommandManager { 
+        Ok(CommandManager { 
             commands: read_result, 
-            path: read_path.clone()
-        }
+            // path: read_path.clone()
+        })
     }
 
-    pub fn get_command(self: &Self, cmd: &String) -> Option<&Command> {
-        return self.commands.get(cmd);
+    pub fn get(&self, cmd: &String) -> Option<&Command> {
+        self.commands.get(cmd)
     }
 
-    fn is_exist(cmd: String) -> bool {
+    pub fn cmd_num(&self) -> usize {
+        self.commands.len()
+    }
+
+    pub fn is_exist(cmd: String) -> bool {
         false
     }
 }
@@ -64,4 +55,3 @@ fn read_commands(path: &String) -> Result<HashMap<String, Command>, io::Error> {
 
     Ok(cmds_map)
 }
-
