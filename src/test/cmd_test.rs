@@ -3,6 +3,11 @@ use crate::cmd::command_part::CommandPart;
 use crate::cmd::command_manager::CommandManager;
 
 
+fn get_manager() -> CommandManager{
+    let data_path = "./test_cmd.json".to_string();
+    CommandManager::new(&data_path).unwrap()
+}
+
 // 新建指令测试
 #[test]
 fn new_cmd() {
@@ -20,10 +25,9 @@ fn new_cmd() {
 
 // 读取指令测试
 #[test]
-fn read_cmd() {
+fn read_cmd_test() {
     // 1. 测试读取指令
-    let data_path = "./test_cmd.json".to_string();
-    let manager = CommandManager::new(&data_path).unwrap();
+    let manager = get_manager();
     assert_eq!(manager.cmd_num(), 2);
 
     // 2. 测试读取指令内容1
@@ -41,4 +45,28 @@ fn read_cmd() {
         assert_eq!(parts[i], true_parts[i]);
         i += 1;
     }
+}
+
+// 代码转换测试
+#[test]
+fn to_code_test() {
+    let manager = get_manager();
+    
+    // 生成编码
+    let nums = vec![1, 2, 3];
+    let add_cmd = manager.get(&"add".to_string()).unwrap();
+    let code = add_cmd.to_code(&nums); 
+
+    // add rd rs rt
+    let answer = 32 + (1<<11) + (2<<22) + (3 << 17);
+
+    // println!("code: {:#b}", code);
+    assert_eq!(code, answer+1);
+}
+
+#[test]
+fn convert_num_test() {
+    let test_num: usize = 1<<32;
+    let func = CommandPart::FUNCT.convert_num(test_num);
+    println!("{}", func);
 }
