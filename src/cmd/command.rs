@@ -7,7 +7,7 @@ use crate::cmd::command_part::CommandPart;
 #[serde(tag="type")]
 pub enum Command {
 	R {
-        funct: u8,
+        funct: usize,
         name: String, 
         parts: Vec<CommandPart>
     }, I, J
@@ -15,14 +15,23 @@ pub enum Command {
 
 
 impl Command {
-    pub fn to_code(&self, parts: &Vec<CommandPart>) -> usize {
+    pub fn to_code(&self, nums: &Vec<usize>) -> u32 {
+
         match self {
-            R => {
-                1
+            Command::R{funct, parts, ..} => {
+                if parts.len() != nums.len() {
+                    return 0;
+                }
+                
+                let mut res = CommandPart::FUNCT.convert_num(*funct);
+                for i in 0..parts.len() {
+                    res += parts[i].convert_num(nums[i]);
+                }
+
+                res
             },
-            _ => {
-                0
-            }
+            Command::I => todo!(),
+            Command::J => todo!(),
         }
     } 
 

@@ -26,9 +26,10 @@ impl CommandPart {
     }  
     
     // 将数字转换到对应位置上
-    pub fn convert_num(&self, num: u8) -> u32 {
-        let res: u32 = num.into();
-        res << self.info().length
+    pub fn convert_num(&self, num: usize) -> u32 {
+        // 当数组超出给定范围时 值取前32位
+        let res: u32 = (num  % (1<<32)).try_into().unwrap();
+        res << self.info().offset
     }
 }
 

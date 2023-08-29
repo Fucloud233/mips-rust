@@ -23,7 +23,8 @@ impl CommandManager {
     }
 
     pub fn get(&self, cmd: &String) -> Option<&Command> {
-        self.commands.get(cmd)
+        // 转换为小写 提高鲁棒性
+        self.commands.get(&cmd.to_lowercase())
     }
 
     pub fn cmd_num(&self) -> usize {
