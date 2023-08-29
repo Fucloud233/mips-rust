@@ -1,8 +1,9 @@
 use std::{collections::HashMap, fs::File, io};
 use super::command::Command;
 
-
 pub struct CommandManager {
+    // 使用枚举类型Command来存储Command信息
+    // 能够更方便地映射
     commands: HashMap<String, Command>,
     // path: String, 
 }
@@ -46,11 +47,16 @@ fn read_commands(path: &String) -> Result<HashMap<String, Command>, io::Error> {
     let mut cmds_map = HashMap::new();
     let cmd_values = json_object.as_array().unwrap();
     for cmd_value in cmd_values {
+        // 获取指令名称
+        let name = cmd_value.get("name").unwrap()
+            .as_str().unwrap().to_string();
+        
+        // 获取指令
         let cmd: Command = match serde_json::from_value(cmd_value.clone()) {
             Ok(cmd) => cmd,
             Err(_) => continue
         };
-        cmds_map.insert(cmd.name().clone(), cmd);
+        cmds_map.insert(name, cmd);
     }
 
     Ok(cmds_map)

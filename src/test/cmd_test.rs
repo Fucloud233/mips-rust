@@ -1,4 +1,4 @@
-use crate::cmd::command::{Command, CommandType};
+use crate::cmd::command::Command;
 use crate::cmd::command_part::CommandPart;
 use crate::cmd::command_manager::CommandManager;
 
@@ -6,14 +6,16 @@ use crate::cmd::command_manager::CommandManager;
 // 新建指令测试
 #[test]
 fn new_cmd() {
-    let cmd = Command::new(
-        CommandType::R, 
-        "MUT".to_string(),
-        12,
-        vec![CommandPart::OP],
-    );
-    // println!("{:?}", cmd)
-    assert_eq!(cmd.cmd_type(), &CommandType::R)
+    let cmd = Command::R {
+        funct: 12,
+        name: "MUT".to_string(),
+        parts: vec![CommandPart::OP]
+    };
+
+    match cmd {
+        Command::R {funct, ..} => assert_eq!(funct, 12),
+        _ => return
+    }    
 }
 
 // 读取指令测试
@@ -29,7 +31,7 @@ fn read_cmd() {
     let cmd = manager.get(&cmd_name1).unwrap();
     assert_eq!(cmd.name(), &cmd_name1);
     
-    // 3. 测试读取指令内容2
+    // // 3. 测试读取指令内容2
     let cmd_name2 = "add".to_string();
     let cmd = manager.get(&cmd_name2).unwrap();
     let parts = cmd.parts();
