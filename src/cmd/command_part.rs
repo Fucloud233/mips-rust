@@ -14,13 +14,13 @@ impl CommandPart {
     // 获取info
     pub fn info(&self) -> &CommandPartInfo {
         match self {
-            CommandPart::OP => &CommandPartInfo { length: 6, offset: 27},
-            CommandPart::RS => &CommandPartInfo { length: 5, offset: 22},
-            CommandPart::RT => &CommandPartInfo { length: 5, offset: 17},
-            CommandPart::RD => &CommandPartInfo { length: 6, offset: 11},
+            CommandPart::OP => &CommandPartInfo { length: 6, offset: 26},
+            CommandPart::RS => &CommandPartInfo { length: 5, offset: 21},
+            CommandPart::RT => &CommandPartInfo { length: 5, offset: 16},
+            CommandPart::RD => &CommandPartInfo { length: 5, offset: 11},
             CommandPart::SHAMT => &CommandPartInfo { length: 5, offset: 6},
             CommandPart::FUNCT => &CommandPartInfo { length: 6, offset: 0},
-            CommandPart::IMM => todo!(),
+            CommandPart::IMM => &CommandPartInfo {length: 17, offset: 0}
         }
         // COMMANDPARTS.get(self).unwrap()
     }  
