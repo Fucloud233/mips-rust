@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use crate::cmd::command_part::CommandPart;
+use std::io;
 
 // 指令类型
 #[derive(Debug, PartialEq, Deserialize)]
@@ -7,30 +8,42 @@ use crate::cmd::command_part::CommandPart;
 #[serde(tag="type")]
 pub enum Command {
 	R {
-        funct: usize,
         name: String, 
+        funct: usize,
         parts: Vec<CommandPart>
-    }, I, J
+    }, I {
+        name: String,
+        op: usize,
+        parts: Vec<CommandPart>
+    }, J
 }
 
+#[inline(always)]
+fn embed_num(nums: &Vec<usize>, parts: &Vec<CommandPart>) -> Result<u32, io::Error> {
+    if parts.len() != nums.len() {
+        // 当非法输入时
+        return Err(io::ErrorKind::InvalidInput.into())
+    }
+
+    let mut res:u32 = 0;
+    for i in 0..parts.len() {
+        res += parts[i].convert_num(nums[i]);
+    }
+
+    Ok(res)
+}
 
 impl Command {
-    pub fn to_code(&self, nums: &Vec<usize>) -> u32 {
-
+    pub fn to_code(&self, nums: &Vec<usize>) -> Result<u32, io::Error> {
         match self {
             Command::R{funct, parts, ..} => {
-                if parts.len() != nums.len() {
-                    return 0;
-                }
-                
-                let mut res = CommandPart::FUNCT.convert_num(*funct);
-                for i in 0..parts.len() {
-                    res += parts[i].convert_num(nums[i]);
-                }
-
-                res
+                let num = embed_num(nums, parts)?;
+                Ok(CommandPart::FUNCT.convert_num(*funct) + num)
             },
-            Command::I => todo!(),
+            Command::I{op, parts, ..} => {
+                let num = embed_num(nums, parts)?;
+                Ok(CommandPart::OP.convert_num(*op) + num)
+            }
             Command::J => todo!(),
         }
     } 
@@ -38,7 +51,7 @@ impl Command {
     pub fn name(&self) -> &String {
         match self {
             Command::R{ name, ..} => name,
-            Command::I => todo!(),
+            Command::I{ name, ..} => name,
             Command::J => todo!(),
         }
     }
@@ -46,7 +59,7 @@ impl Command {
     pub fn parts(&self) -> &Vec<CommandPart> {
         match self {
             Command::R{ parts, ..} => parts,
-            Command::I => todo!(),
+            Command::I{ parts, ..} => parts,
             Command::J => todo!(),
         }
     }
