@@ -3,8 +3,8 @@ use crate::cmd::command_part::CommandPart;
 use crate::cmd::command_manager::CommandManager;
 
 
-fn get_manager() -> CommandManager{
-    let data_path = "./test_cmd.json".to_string();
+fn get_manager(data_path: String) -> CommandManager{
+    // let data_path = "./test_cmd.json".to_string();
     CommandManager::new(&data_path).unwrap()
 }
 
@@ -27,7 +27,7 @@ fn new_cmd() {
 #[test]
 fn read_cmd_test() {
     // 1. 测试读取指令
-    let manager = get_manager();
+    let manager = get_manager("./test_cmd.json".to_string());
     assert_eq!(manager.cmd_num(), 2);
 
     // 2. 测试读取指令内容1
@@ -49,19 +49,34 @@ fn read_cmd_test() {
 
 // 代码转换测试
 #[test]
-fn to_code_test() {
-    let manager = get_manager();
+fn r_to_code_test() {
+    let manager = get_manager("./test_cmd.json".to_string());
     
+    /* R型指令测试 */
     // 生成编码
     let nums = vec![1, 2, 3];
     let add_cmd = manager.get(&"add".to_string()).unwrap();
-    let code = add_cmd.to_code(&nums); 
+    let code = add_cmd.to_code(&nums).unwrap(); 
 
     // add rd rs rt
-    let answer = 32 + (1<<11) + (2<<22) + (3 << 17);
+    let answer = 32 + (1<<11) + (2<<21) + (3 << 16);
 
     // println!("code: {:#b}", code);
-    assert_eq!(code, answer+1);
+    assert_eq!(code, answer);
+}
+
+#[test]
+fn i_to_code_test() {
+    let manager = get_manager("./test_i_cmd.json".to_string());
+    assert_eq!(manager.cmd_num(), 1);
+
+    
+    let nums = vec![1, 2, 3];
+    let beq_cmd = manager.get(&"beq".to_string()).unwrap();
+    let code = beq_cmd.to_code(&nums).unwrap();
+
+    let answer = (4 << 26) + (1 <<21) + (2 << 16) + 3;
+    assert_eq!(code, answer);
 }
 
 #[test]

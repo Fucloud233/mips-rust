@@ -1,0 +1,8 @@
+[
+    {
+        "type": "I",
+        "op": 4,
+        "name": "beq",
+        "parts": ["RS", "RT", "IMM"]
+    }
+]
