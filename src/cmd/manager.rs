@@ -1,5 +1,9 @@
 use std::{collections::HashMap, fs::File, io};
-use super::command::Command;
+
+use super::{
+    error::ErrorKind as CmdErr,
+    command::{Command, Cmd}
+};
 
 pub struct CommandManager {
     // 使用枚举类型Command来存储Command信息
@@ -25,6 +29,40 @@ impl CommandManager {
     pub fn get(&self, cmd: &String) -> Option<&Command> {
         // 转换为小写 提高鲁棒性
         self.commands.get(&cmd.to_lowercase())
+    }
+
+    // 验证输入指令是否合法
+    pub fn check(&self, cmd: &Cmd) -> Option<CmdErr> {
+        // 验证指令名称是否存在 
+        let command = match self.get(cmd.name()) {
+            Some(c) => c, 
+            // FIXME: 这里是否要clone 还是修改引号
+            None => return Some(CmdErr::NameNotExist { name: cmd.name().clone()})
+        };
+
+        // 验证操作数是否相同
+        let parts = command.parts();
+        let nums = cmd.nums();
+        if parts.len() != nums.len() {
+            return Some(CmdErr::OperandNumError { 
+                expect: parts.len(), 
+                but: nums.len() 
+            })
+        }
+
+        // 验证操作数是否在大小限制内
+        for i in 0..parts.len() {
+            if parts[i].check(nums[i]) {
+                return Some(CmdErr::OperandNumExcced { 
+                    // FIXME: 这里是否要clone 还是修改引号
+                    part: parts[i].clone(), 
+                    expect: parts.len(), 
+                    but: nums.len() 
+                })
+            }
+        }
+        
+        None
     }
 
     pub fn cmd_num(&self) -> usize {

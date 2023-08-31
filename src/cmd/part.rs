@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Hash, Eq, PartialEq, Debug, Deserialize)]
+#[derive(Hash, Eq, PartialEq, Debug, Deserialize, Clone)]
 // #[serde(untagged)]
 pub enum CommandPart {
 	// INVALID = CommandType
@@ -30,6 +30,11 @@ impl CommandPart {
         // 当数组超出给定范围时 值取前32位
         let res: u32 = (num  % (1<<32)).try_into().unwrap();
         res << self.info().offset
+    }
+
+    // 验证输入数据是否超出Part大小
+    pub fn check(&self, num: usize) -> bool {
+        return num >= (1<<self.info().length)
     }
 }
 
