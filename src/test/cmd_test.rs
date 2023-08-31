@@ -1,9 +1,16 @@
-use crate::cmd::command::Command;
-use crate::cmd::command_part::CommandPart;
-use crate::cmd::command_manager::CommandManager;
+use lazy_static::lazy_static;
+use crate::cmd::{
+    command::Command,
+    part::CommandPart,
+    manager::CommandManager,
+};
 
+lazy_static! {
+    static ref test_cmd_file: String = String::from("./data/test/test_cmd.json");
+    static ref test_i_cmd_file: String = String::from("./data/test/test_i_cmd.json");
+}
 
-fn get_manager(data_path: String) -> CommandManager{
+fn get_manager(data_path: &String) -> CommandManager{
     // let data_path = "./test_cmd.json".to_string();
     CommandManager::new(&data_path).unwrap()
 }
@@ -27,7 +34,7 @@ fn new_cmd() {
 #[test]
 fn read_cmd_test() {
     // 1. 测试读取指令
-    let manager = get_manager("./test_cmd.json".to_string());
+    let manager = get_manager(&test_cmd_file);
     assert_eq!(manager.cmd_num(), 2);
 
     // 2. 测试读取指令内容1
@@ -50,7 +57,7 @@ fn read_cmd_test() {
 // 代码转换测试
 #[test]
 fn r_to_code_test() {
-    let manager = get_manager("./test_cmd.json".to_string());
+    let manager = get_manager(&test_cmd_file);
     
     /* R型指令测试 */
     // 生成编码
@@ -67,7 +74,7 @@ fn r_to_code_test() {
 
 #[test]
 fn i_to_code_test() {
-    let manager = get_manager("./test_i_cmd.json".to_string());
+    let manager = get_manager(&test_i_cmd_file);
     assert_eq!(manager.cmd_num(), 1);
 
     
