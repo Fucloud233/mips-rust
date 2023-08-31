@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use crate::cmd::command_part::CommandPart;
+use crate::cmd::part::CommandPart;
 use std::io;
 
 // 指令类型
@@ -62,6 +62,28 @@ impl Command {
             Command::I{ parts, ..} => parts,
             Command::J => todo!(),
         }
+    }
+}
+
+// 输入的指令结构体
+pub struct Cmd {
+    name: String,
+    nums: Vec<usize>
+}
+
+impl Cmd {
+    pub fn new(name: String, nums: Vec<usize>) -> Self {
+        return Cmd {
+            name, nums
+        }
+    }
+
+    pub fn name(&self) -> &String {
+        &self.name
+    }
+
+    pub fn nums(&self) -> &Vec<usize> {
+        &self.nums
     }
 }
 
