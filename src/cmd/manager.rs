@@ -1,7 +1,6 @@
 use std::{collections::HashMap, fs::File, io};
-
 use super::{
-    error::ErrorKind as CmdErr,
+    error::CompileErrorKind as CompileErrKind,
     command::{Command, Cmd}
 };
 
@@ -32,32 +31,32 @@ impl CommandManager {
     }
 
     // 验证输入指令是否合法
-    pub fn check(&self, cmd: &Cmd) -> Option<CmdErr> {
+    pub fn check(&self, cmd: &Cmd) -> Option<CompileErrKind> {
         // 验证指令名称是否存在 
         let command = match self.get(cmd.name()) {
             Some(c) => c, 
             // FIXME: 这里是否要clone 还是修改引号
-            None => return Some(CmdErr::NameNotExist { name: cmd.name().clone()})
+            None => return Some(CompileErrKind::NameNotExist { name: cmd.name().clone()})
         };
 
         // 验证操作数是否相同
         let parts = command.parts();
         let nums = cmd.nums();
         if parts.len() != nums.len() {
-            return Some(CmdErr::OperandNumError { 
-                expect: parts.len(), 
-                but: nums.len() 
+            return Some(CompileErrKind::OperandNumError { 
+                expected: parts.len(), 
+                found: nums.len() 
             })
         }
 
         // 验证操作数是否在大小限制内
         for i in 0..parts.len() {
             if parts[i].check(nums[i]) {
-                return Some(CmdErr::OperandNumExcced { 
+                return Some(CompileErrKind::OperandNumExcced { 
                     // FIXME: 这里是否要clone 还是修改引号
                     part: parts[i].clone(), 
-                    expect: parts.len(), 
-                    but: nums.len() 
+                    expected: parts.len(), 
+                    found: nums.len() 
                 })
             }
         }

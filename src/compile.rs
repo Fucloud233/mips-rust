@@ -4,8 +4,8 @@ use crate::cmd::{
     manager::{CommandManager},
     command::{Cmd},
     error::{
-        ErrorKind as CmdErrKind,
-        Error as CmdErr
+        CompileErrorKind as CompileErrKind,
+        CompileError as CmdErr
     }
 };
 
@@ -46,7 +46,7 @@ fn read_cmds(file_path: &String) -> Result<Vec<(usize, String)>, io::Error> {
 }
 
 // 将每一行数据解析为中间结构Cmd
-fn parse_cmd(line: &String) -> Result<Cmd, CmdErrKind> {
+fn parse_cmd(line: &String) -> Result<Cmd, CompileErrKind> {
     // 将指令按空白字符分解
     let mut stream = line.split_whitespace();
     
@@ -58,7 +58,8 @@ fn parse_cmd(line: &String) -> Result<Cmd, CmdErrKind> {
     loop {
         match stream.next() {
             Some(p) => {
-                let num: usize = p.parse().or(Err(CmdErrKind::OperandParseError))?;
+                let num: usize = p.parse()
+                    .or(Err(CompileErrKind::OperandParseError))?;
                 nums.push(num)
             }
             None => break
