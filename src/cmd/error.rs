@@ -3,18 +3,11 @@ use thiserror::Error;
 
 // doc: https://docs.rs/thiserror/latest/thiserror/#derives
 
-#[derive(Error, Debug)]
-pub enum ManagerErrorKind {
-    #[error("{name:?}文件不存在")]
-    NotFound{name: String},
-    #[error("Json文件解析错误")]
-    JsonParseError,    
-}
 
 #[derive(Error, Debug)]
 pub enum CompileErrorKind {
     #[error("指令\"{name:?}\"不存在")]
-    NameNotExist{name:String},
+    NameNotExist{name: String},
     #[error("操作数解析失败")]
     OperandParseError,
     #[error("操作数应该有{expected:?}个, 但提供了{found:?}")]
