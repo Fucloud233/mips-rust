@@ -3,12 +3,12 @@
         "type": "R",
         "funct": 12,
         "name": "syscall",
-        "parts": []
+        "operands": []
     },
     {
         "type": "R",
         "funct": 32,
         "name": "add",
-        "parts": ["RD", "RS", "RT"]
+        "operands": ["RD", "RS", "RT"]
     }
 ]
