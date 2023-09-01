@@ -1,8 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Hash, Eq, PartialEq, Debug, Deserialize, Clone)]
-// #[serde(untagged)]
-pub enum CommandPart {
+pub enum Operand {
 	// INVALID = CommandType
 	OP, RS, RT, RD, 
 	SHAMT,
@@ -10,17 +9,17 @@ pub enum CommandPart {
 	IMM,
 }
 
-impl CommandPart {
+impl Operand {
     // 获取info
-    pub fn info(&self) -> &CommandPartInfo {
+    pub fn info(&self) -> &OperandInfo {
         match self {
-            CommandPart::OP => &CommandPartInfo { length: 6, offset: 26},
-            CommandPart::RS => &CommandPartInfo { length: 5, offset: 21},
-            CommandPart::RT => &CommandPartInfo { length: 5, offset: 16},
-            CommandPart::RD => &CommandPartInfo { length: 5, offset: 11},
-            CommandPart::SHAMT => &CommandPartInfo { length: 5, offset: 6},
-            CommandPart::FUNCT => &CommandPartInfo { length: 6, offset: 0},
-            CommandPart::IMM => &CommandPartInfo {length: 17, offset: 0}
+            Operand::OP => &OperandInfo { length: 6, offset: 26},
+            Operand::RS => &OperandInfo { length: 5, offset: 21},
+            Operand::RT => &OperandInfo { length: 5, offset: 16},
+            Operand::RD => &OperandInfo { length: 5, offset: 11},
+            Operand::SHAMT => &OperandInfo { length: 5, offset: 6},
+            Operand::FUNCT => &OperandInfo { length: 6, offset: 0},
+            Operand::IMM => &OperandInfo {length: 16, offset: 0}
         }
         // COMMANDPARTS.get(self).unwrap()
     }  
@@ -39,7 +38,7 @@ impl CommandPart {
 }
 
 // 指令部分中的信息
-pub struct CommandPartInfo {
+pub struct OperandInfo {
     pub length: u8,
     pub offset: u8,
 }

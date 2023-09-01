@@ -1,4 +1,4 @@
-use super::part::CommandPart;
+use super::operand::Operand;
 use thiserror::Error;
 
 // doc: https://docs.rs/thiserror/latest/thiserror/#derives
@@ -19,8 +19,8 @@ pub enum CompileErrorKind {
     OperandParseError,
     #[error("操作数应该有{expected:?}个, 但提供了{found:?}")]
     OperandNumError{expected: usize, found:usize},
-    #[error("操作数{part:?}大小为{expected:?}位")]
-    OperandNumExcced{part: CommandPart, expected: usize, found: usize}
+    #[error("操作数{operand:?}大小为{expected:?}位")]
+    OperandNumExcced{operand: Operand, expected: usize, found: usize}
 }
 
 pub struct CompileError {

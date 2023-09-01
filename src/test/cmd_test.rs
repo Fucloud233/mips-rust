@@ -1,7 +1,7 @@
 use lazy_static::lazy_static;
 use crate::cmd::{
-    command::Command,
-    part::CommandPart,
+    command::CmdKind,
+    operand::Operand,
     manager::CommandManager,
 };
 
@@ -18,14 +18,14 @@ fn get_manager(data_path: &String) -> CommandManager{
 // 新建指令测试
 #[test]
 fn new_cmd() {
-    let cmd = Command::R {
+    let cmd = CmdKind::R {
         funct: 12,
         name: "MUT".to_string(),
-        parts: vec![CommandPart::OP]
+        operands: vec![Operand::OP]
     };
 
     match cmd {
-        Command::R {funct, ..} => assert_eq!(funct, 12),
+        CmdKind::R {funct, ..} => assert_eq!(funct, 12),
         _ => return
     }    
 }
@@ -45,8 +45,8 @@ fn read_cmd_test() {
     // // 3. 测试读取指令内容2
     let cmd_name2 = "add".to_string();
     let cmd = manager.get(&cmd_name2).unwrap();
-    let parts = cmd.parts();
-    let true_parts = [CommandPart::RD, CommandPart::RS, CommandPart::RT];
+    let parts = cmd.operands();
+    let true_parts = [Operand::RD, Operand::RS, Operand::RT];
     let mut i = 0;
     while i < parts.len() {
         assert_eq!(parts[i], true_parts[i]);
@@ -89,6 +89,6 @@ fn i_to_code_test() {
 #[test]
 fn convert_num_test() {
     let test_num: usize = 1<<32;
-    let func = CommandPart::FUNCT.convert_num(test_num);
+    let func = Operand::FUNCT.convert_num(test_num);
     println!("{}", func);
 }

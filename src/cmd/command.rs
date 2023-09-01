@@ -1,25 +1,25 @@
 use serde::Deserialize;
-use crate::cmd::part::CommandPart;
+use crate::cmd::operand::Operand;
 use std::io;
 
 // 指令类型
 #[derive(Debug, PartialEq, Deserialize)]
 // https://serde.rs/enum-representations.html
 #[serde(tag="type")]
-pub enum Command {
+pub enum CmdKind {
 	R {
         name: String, 
         funct: usize,
-        parts: Vec<CommandPart>
+        operands: Vec<Operand>
     }, I {
         name: String,
         op: usize,
-        parts: Vec<CommandPart>
+        operands: Vec<Operand>
     }, J
 }
 
 #[inline(always)]
-fn embed_num(nums: &Vec<usize>, parts: &Vec<CommandPart>) -> Result<u32, io::Error> {
+fn embed_num(nums: &Vec<usize>, parts: &Vec<Operand>) -> Result<u32, io::Error> {
     if parts.len() != nums.len() {
         // 当非法输入时
         return Err(io::ErrorKind::InvalidInput.into())
@@ -33,34 +33,34 @@ fn embed_num(nums: &Vec<usize>, parts: &Vec<CommandPart>) -> Result<u32, io::Err
     Ok(res)
 }
 
-impl Command {
+impl CmdKind {
     pub fn to_code(&self, nums: &Vec<usize>) -> Result<u32, io::Error> {
         match self {
-            Command::R{funct, parts, ..} => {
-                let num = embed_num(nums, parts)?;
-                Ok(CommandPart::FUNCT.convert_num(*funct) + num)
+            CmdKind::R{funct, operands, ..} => {
+                let num = embed_num(nums, operands)?;
+                Ok(Operand::FUNCT.convert_num(*funct) + num)
             },
-            Command::I{op, parts, ..} => {
-                let num = embed_num(nums, parts)?;
-                Ok(CommandPart::OP.convert_num(*op) + num)
+            CmdKind::I{op, operands, ..} => {
+                let num = embed_num(nums, operands)?;
+                Ok(Operand::OP.convert_num(*op) + num)
             }
-            Command::J => todo!(),
+            CmdKind::J => todo!(),
         }
     } 
 
     pub fn name(&self) -> &String {
         match self {
-            Command::R{ name, ..} => name,
-            Command::I{ name, ..} => name,
-            Command::J => todo!(),
+            CmdKind::R{ name, ..} => name,
+            CmdKind::I{ name, ..} => name,
+            CmdKind::J => todo!(),
         }
     }
 
-    pub fn parts(&self) -> &Vec<CommandPart> {
+    pub fn operands(&self) -> &Vec<Operand> {
         match self {
-            Command::R{ parts, ..} => parts,
-            Command::I{ parts, ..} => parts,
-            Command::J => todo!(),
+            CmdKind::R{ operands, ..} => operands,
+            CmdKind::I{ operands, ..} => operands,
+            CmdKind::J => todo!(),
         }
     }
 }
