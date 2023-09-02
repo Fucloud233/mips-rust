@@ -1,23 +1,23 @@
 use lazy_static::lazy_static;
 use crate::cmd::{
-    manager::{CommandManager},
-    command::{Cmd},
+    manager::CmdManager,
+    command::Cmd,
     error::{
         CompileErrorKind as CompileErrKind,
         CompileError as CompileErr
     }
 };
 
-fn load_manager() -> CommandManager {
+fn load_manager() -> CmdManager {
     let read_path = "./data/test/test_cmd.json".to_string();
-    match CommandManager::new(&read_path) {
+    match CmdManager::new(&read_path) {
         Ok(m) => return m,
         Err(err) => panic!("{:?}", err)
     }
 }
 
 lazy_static!{
-    static ref MANAGER: CommandManager = load_manager();
+    static ref MANAGER: CmdManager = load_manager();
 }
 
 // 将每一行数据解析为中间结构Cmd
@@ -51,30 +51,23 @@ pub(crate) fn parse_cmd(line: &String) -> Result<Cmd, CompileErrKind> {
     Ok(read_cmd)
 }
 
-fn output_codes(codes: &Vec<u32>, file_path: &String) {
-
-}
-
 // 修改运行函数接口: 读取指令部分被解耦开
-pub fn run(lines: &Vec<(usize, String)>, output_file: &String) -> Option<CompileErr> {
+pub fn compile(lines: &Vec<(usize, String)>) -> Result<Vec<u32>, CompileErr> {
     // 将字符串读取为Cmd中间数据结构
     let mut cmds: Vec<Cmd> = Vec::new();
     for line in lines {
-        let cmd = match parse_cmd(&line.1) {
-            Ok(c) => c,
-            Err(err) => return Some(CompileErr::new(line.0, err))
-        };
+        let cmd = parse_cmd(&line.1)
+            .or_else(|err| Err(CompileErr::new(line.0, err)))?;
         cmds.push(cmd);
     }
 
-    // TODO: 验证Cmd中间数据结构
+    // 将字符串指令汇编成机器指令
+    let mut codes: Vec<u32> = Vec::new();
+    for cmd in cmds {
+        let cmd_kind = MANAGER.get(cmd.name()).unwrap();
+        let code = cmd_kind.to_code(cmd.nums()).unwrap();
+        codes.push(code);
+    }
 
-
-    // TODO: 将字符串指令汇编成机器指令
-
-
-    // TODO: 输出机器指令
-    // output_codes(&codes, &output_file);
-
-    None
+    Ok(codes)
 }

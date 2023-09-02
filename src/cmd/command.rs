@@ -1,6 +1,8 @@
 use serde::Deserialize;
-use crate::cmd::operand::Operand;
-use std::io;
+use super::{
+    operand::Operand,
+    error::CompileErrorKind as CompileErrKind
+};
 
 // 指令类型
 #[derive(Debug, PartialEq, Deserialize)]
@@ -19,30 +21,32 @@ pub enum CmdKind {
 }
 
 #[inline(always)]
-fn embed_num(nums: &Vec<usize>, parts: &Vec<Operand>) -> Result<u32, io::Error> {
+fn embed_oprands(nums: &Vec<usize>, parts: &Vec<Operand>) -> Result<u32, CompileErrKind> {
     if parts.len() != nums.len() {
-        // 当非法输入时
-        return Err(io::ErrorKind::InvalidInput.into())
+        return Err(CompileErrKind::OperandNumError{
+            expected: nums.len(),
+            found: nums.len()
+        })
     }
 
     let mut res:u32 = 0;
     for i in 0..parts.len() {
-        res += parts[i].convert_num(nums[i]);
+        res += parts[i].to_code(nums[i]);
     }
 
     Ok(res)
 }
 
-impl CmdKind {
-    pub fn to_code(&self, nums: &Vec<usize>) -> Result<u32, io::Error> {
+impl CmdKind {  
+    pub fn to_code(&self, nums: &Vec<usize>) -> Result<u32, CompileErrKind> {
         match self {
             CmdKind::R{funct, operands, ..} => {
-                let num = embed_num(nums, operands)?;
-                Ok(Operand::FUNCT.convert_num(*funct) + num)
+                let num = embed_oprands(nums, operands)?;
+                Ok(Operand::FUNCT.to_code(*funct) + num)
             },
             CmdKind::I{op, operands, ..} => {
-                let num = embed_num(nums, operands)?;
-                Ok(Operand::OP.convert_num(*op) + num)
+                let num = embed_oprands(nums, operands)?;
+                Ok(Operand::OP.to_code(*op) + num)
             }
             CmdKind::J => todo!(),
         }

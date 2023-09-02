@@ -2,17 +2,17 @@ use lazy_static::lazy_static;
 use crate::cmd::{
     command::CmdKind,
     operand::Operand,
-    manager::CommandManager,
+    manager::CmdManager,
 };
 
 lazy_static! {
-    static ref test_cmd_file: String = String::from("./data/test/test_cmd.json");
-    static ref test_i_cmd_file: String = String::from("./data/test/test_i_cmd.json");
+    static ref TEST_CMD_FILE: String = String::from("./data/test/test_cmd.json");
+    static ref TEST_I_CMD_FILE: String = String::from("./data/test/test_i_cmd.json");
 }
 
-fn get_manager(data_path: &String) -> CommandManager{
+fn get_manager(data_path: &String) -> CmdManager{
     // let data_path = "./test_cmd.json".to_string();
-    CommandManager::new(&data_path).unwrap()
+    CmdManager::new(&data_path).unwrap()
 }
 
 // 新建指令测试
@@ -34,7 +34,7 @@ fn new_cmd() {
 #[test]
 fn read_cmd_test() {
     // 1. 测试读取指令
-    let manager = get_manager(&test_cmd_file);
+    let manager = get_manager(&TEST_CMD_FILE);
     assert_eq!(manager.cmd_num(), 2);
 
     // 2. 测试读取指令内容1
@@ -57,7 +57,7 @@ fn read_cmd_test() {
 // 代码转换测试
 #[test]
 fn r_to_code_test() {
-    let manager = get_manager(&test_cmd_file);
+    let manager = get_manager(&TEST_CMD_FILE);
     
     /* R型指令测试 */
     // 生成编码
@@ -74,7 +74,7 @@ fn r_to_code_test() {
 
 #[test]
 fn i_to_code_test() {
-    let manager = get_manager(&test_i_cmd_file);
+    let manager = get_manager(&TEST_I_CMD_FILE);
     assert_eq!(manager.cmd_num(), 1);
 
     
@@ -89,6 +89,6 @@ fn i_to_code_test() {
 #[test]
 fn convert_num_test() {
     let test_num: usize = 1<<32;
-    let func = Operand::FUNCT.convert_num(test_num);
+    let func = Operand::FUNCT.to_code(test_num);
     println!("{}", func);
 }

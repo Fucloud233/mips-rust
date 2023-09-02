@@ -4,14 +4,14 @@ use super::{
     command::{CmdKind, Cmd}
 };
 
-pub struct CommandManager {
+pub struct CmdManager {
     // 使用枚举类型Command来存储Command信息
     // 能够更方便地映射
     commands: HashMap<String, CmdKind>,
     // path: String, 
 }
 
-impl CommandManager {
+impl CmdManager {
     // CommandManager在新建之后 就会读取配置文件
     // 可能会遇到以下错误
     // 1. NotFound: 配置文件不存在
@@ -19,7 +19,7 @@ impl CommandManager {
     pub fn new(cmd_file_path: &String) -> Result<Self, io::Error> {
         let read_result = read_commands(cmd_file_path)?;
 
-        Ok(CommandManager { 
+        Ok(CmdManager { 
             commands: read_result, 
             // path: read_path.clone()
         })
@@ -68,9 +68,9 @@ impl CommandManager {
         self.commands.len()
     }
 
-    pub fn is_exist(cmd: String) -> bool {
-        false
-    }
+    // pub fn is_exist(cmd: String) -> bool {
+    //     false
+    // }
 }
 
 
