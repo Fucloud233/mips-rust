@@ -23,17 +23,22 @@ impl Operand {
         }
         // COMMANDPARTS.get(self).unwrap()
     }  
+
+    #[inline(always)]
+    fn get_max_range(&self) -> usize {
+        1 << self.info().length - 1
+    }
     
     // 将数字转换到对应位置上
-    pub fn convert_num(&self, num: usize) -> u32 {
+    pub fn to_code(&self, num: usize) -> u32 {
         // 当数组超出给定范围时 值取前32位
-        let res: u32 = (num  % (1<<32)).try_into().unwrap();
+        let res: u32 = (num & self.get_max_range()).try_into().unwrap();
         res << self.info().offset
     }
 
     // 验证输入数据是否超出Part大小
     pub fn check(&self, num: usize) -> bool {
-        return num >= (1<<self.info().length)
+        num > self.get_max_range()
     }
 }
 
