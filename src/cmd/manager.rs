@@ -51,7 +51,7 @@ impl CmdManager {
 
         // 验证操作数是否在大小限制内
         for i in 0..operands.len() {
-            if operands[i].check(nums[i]) {
+            if !operands[i].check(nums[i]) {
                 return Some(CompileErrKind::OperandNumExcced { 
                     // FIXME: 这里是否要clone 还是修改引号
                     operand: operands[i].clone(), 
