@@ -11,42 +11,45 @@ use super::{
 pub enum CmdKind {
 	R {
         name: String, 
-        funct: usize,
+        funct: isize,
         operands: Vec<Operand>
     }, I {
         name: String,
-        op: usize,
+        op: isize,
         operands: Vec<Operand>
     }, J
 }
 
 #[inline(always)]
-fn embed_oprands(nums: &Vec<usize>, parts: &Vec<Operand>) -> Result<u32, CompileErrKind> {
-    if parts.len() != nums.len() {
-        return Err(CompileErrKind::OperandNumError{
-            expected: nums.len(),
-            found: nums.len()
-        })
+fn embed_oprands(nums: &Vec<isize>, parts: &Vec<Operand>) -> Result<u32, CompileErrKind> {
+    fn get_compile_err(nums: &Vec<isize>, parts: &Vec<Operand>) -> CompileErrKind {
+        CompileErrKind::OperandNumError { 
+            expected: parts.len(), found: nums.len() 
+        }
     }
 
     let mut res:u32 = 0;
     for i in 0..parts.len() {
-        res += parts[i].to_code(nums[i]);
+        // 此处不单独进行条件验证 而是采用出错报错的策略
+        let part = parts.get(i).ok_or(get_compile_err(nums, parts))?;
+        let num = nums.get(i).ok_or(get_compile_err(nums, parts))?;
+
+        res += part.to_code(num);
     }
 
     Ok(res)
 }
 
 impl CmdKind {  
-    pub fn to_code(&self, nums: &Vec<usize>) -> Result<u32, CompileErrKind> {
+    pub fn to_code(&self, nums: &Vec<isize>) -> Result<u32, CompileErrKind> {
         match self {
             CmdKind::R{funct, operands, ..} => {
                 let num = embed_oprands(nums, operands)?;
-                Ok(Operand::FUNCT.to_code(*funct) + num)
+                Ok(Operand::FUNCT.to_code(funct) + num)
             },
             CmdKind::I{op, operands, ..} => {
                 let num = embed_oprands(nums, operands)?;
-                Ok(Operand::OP.to_code(*op) + num)
+                Ok(Operand::OP.to_code(op) + num)
             }
             CmdKind::J => todo!(),
         }
@@ -72,11 +75,11 @@ impl CmdKind {
 // 输入的指令结构体
 pub struct Cmd {
     name: String,
-    nums: Vec<usize>
+    nums: Vec<isize>
 }
 
 impl Cmd {
-    pub fn new(name: String, nums: Vec<usize>) -> Self {
+    pub fn new(name: String, nums: Vec<isize>) -> Self {
         return Cmd {
             name, nums
         }
@@ -86,7 +89,7 @@ impl Cmd {
         &self.name
     }
 
-    pub fn nums(&self) -> &Vec<usize> {
+    pub fn nums(&self) -> &Vec<isize> {
         &self.nums
     }
 }

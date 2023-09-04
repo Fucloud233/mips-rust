@@ -25,20 +25,21 @@ impl Operand {
     }  
 
     #[inline(always)]
-    fn get_max_range(&self) -> usize {
-        1 << self.info().length - 1
+    fn get_max_range(&self) -> isize {
+        // 优先级: 移位运算符 < 四则运算
+        (1 << self.info().length) - 1
     }
     
     // 将数字转换到对应位置上
-    pub fn to_code(&self, num: usize) -> u32 {
+    pub fn to_code(&self, num: &isize) -> u32 {
         // 当数组超出给定范围时 值取前32位
         let res: u32 = (num & self.get_max_range()).try_into().unwrap();
         res << self.info().offset
     }
 
     // 验证输入数据是否超出Part大小
-    pub fn check(&self, num: usize) -> bool {
-        num > self.get_max_range()
+    pub fn check(&self, num: isize) -> bool {
+        num <= i32::MAX as isize && num >= i32::MIN as isize
     }
 }
 

@@ -88,7 +88,7 @@ fn i_to_code_test() {
 
 #[test]
 fn convert_num_test() {
-    let test_num: usize = 1<<32;
-    let func = Operand::FUNCT.to_code(test_num);
+    let test_num: isize = 1<<32;
+    let func = Operand::FUNCT.to_code(&test_num);
     println!("{}", func);
 }

@@ -9,7 +9,7 @@ use crate::cmd::{
 };
 
 fn load_manager() -> CmdManager {
-    let read_path = "./data/test/test_cmd.json".to_string();
+    let read_path = String::from("./data/cmds.json");
     match CmdManager::new(&read_path) {
         Ok(m) => return m,
         Err(err) => panic!("{:?}", err)
@@ -27,13 +27,12 @@ pub(crate) fn parse_cmd(line: &String) -> Result<Cmd, CompileErrKind> {
     
     // 1. 读取指令名称
     let cmd_name = stream.next().unwrap().to_string();
-
     // 2. 读取操作数
-    let mut nums: Vec<usize> = Vec::new();
+    let mut nums: Vec<isize> = Vec::new();
     loop {
         match stream.next() {
             Some(p) => {
-                let num: usize = p.parse()
+                let num: isize = p.parse()
                     .or(Err(CompileErrKind::OperandParseError))?;
                 nums.push(num)
             }

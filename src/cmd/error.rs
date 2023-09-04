@@ -16,6 +16,7 @@ pub enum CompileErrorKind {
     OperandNumExcced{operand: Operand, expected: usize, found: usize}
 }
 
+#[derive(Debug)]
 pub struct CompileError {
     kind: CompileErrorKind,
     line: usize
