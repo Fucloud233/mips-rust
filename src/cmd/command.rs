@@ -93,23 +93,3 @@ impl Cmd {
         &self.nums
     }
 }
-
-// // 用于验证输入数字是否合法
-// fn check_nums(&self, nums: &Vec<u8>) -> bool {
-//     if self.parts.len() != nums.len() {
-//         return false
-//     }
-
-//     let mut i = 0;
-//     while i<nums.len() {
-//         let part_len =  self.parts[i].info().length();
-//         let scope = 1 << part_len;
-//         // 判断数据是否越界
-//         if nums[i] > scope {
-//             return false
-//         } 
-//         i += 1;
-//     }
-
-//     true
-// }
