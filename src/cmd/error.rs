@@ -1,3 +1,5 @@
+use std::fmt::{self, Display};
+
 use super::operand::Operand;
 use thiserror::Error;
 
@@ -27,5 +29,15 @@ impl CompileError {
         return Self {
             line, kind
         }
+    }
+
+    pub fn kind(&self) -> &CompileErrorKind {
+        &self.kind
+    }
+}
+
+impl Display for CompileError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "line {}: {}", self.line, self.kind)
     }
 }

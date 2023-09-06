@@ -1,0 +1,50 @@
+[
+    {
+        "type": "R",
+        "name": "syscall",
+        "funct": 12,
+        "operands": []
+    },
+    {
+        "type": "R",
+        "name": "add",
+        "funct": 32,
+        "operands": ["RD", "RS", "RT"]
+    },
+    {
+        "type": "R",
+        "name": "slt",
+        "funct": 42,
+        "operands": ["RD", "RS", "RT"]
+    },
+    {
+        "type": "I",
+        "name": "beq",
+        "op": 4,
+        "operands": ["RS", "RT", "IMM"]
+    },
+    {
+        "type": "I",
+        "name": "bne",
+        "op": 5,
+        "operands": ["RS", "RT", "IMM"]
+    },
+    {
+        "type": "I",
+        "name": "addi",
+        "op": 8,
+        "operands": ["RT", "RS", "IMM"]
+    },
+    {
+        "type": "I",
+        "name": "lw",
+        "op": 35,
+        "operands": ["RT", "IMM", "RS"]
+    },
+    {
+        "type": "I", 
+        "name": "sw",
+        "op": 43,
+        "operands": ["RT", "IMM", "RS"]
+    }
+]
