@@ -5,7 +5,7 @@ use std::{fs::File, io::Write};
 //     static ref LOGISIM_HEADER: String = String::from("v2.0 raw");
 // }
 
-
+#[derive(Debug, Clone)]
 pub enum SaveFormatType {
     Logisim, Plain
 }
