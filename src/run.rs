@@ -1,9 +1,10 @@
-use std::io::ErrorKind;
+use std::{io::ErrorKind, fmt::Display};
 use clap::{Parser, ValueEnum, builder::PossibleValue};
 use crate::{
     compile::compile,
     read::read_cmds,
-    save::{SaveFormatType, save_codes}
+    save::save_codes,
+    config::{CONFIG, SaveFormatType}
 };
 
 // https://docs.rs/clap/latest/clap/
@@ -26,6 +27,16 @@ impl ValueEnum for SaveFormatType {
     // }
 }
 
+impl Display for SaveFormatType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", 
+        match self {
+            SaveFormatType::Logisim => "logisim",
+            SaveFormatType::Plain => "plain",
+        })
+    }
+}
+
 #[derive(Parser, Debug)]
 #[command(name = "Mips Compiler")]
 #[command(version = "1.0")]
@@ -39,12 +50,15 @@ struct Args {
     #[arg(short)]
     output: String,
     /// 输出格式
-    #[arg(short)]
+    #[arg(short, default_value_t = CONFIG.default_save_type().clone())]
     format: SaveFormatType
 }
 
 // 程序运行函数
 pub fn run() {
+    // Config::load();
+
+
     // 1. 读取参数
     let args = Args::parse();
     // print!("{:?}", args);
