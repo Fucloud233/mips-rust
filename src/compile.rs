@@ -1,19 +1,26 @@
+use std::process::exit;
 use lazy_static::lazy_static;
-use crate::cmd::{
-    manager::CmdManager,
-    command::Cmd,
-    // config::CONFIG,
-    error::{
-        CompileErrorKind as CompileErrKind,
-        CompileError as CompileErr
+use crate::{
+    configure::CONFIG,
+    cmd::{
+        manager::CmdManager,
+        command::Cmd,
+        error::{
+            CompileErrorKind as CompileErrKind,
+            CompileError as CompileErr
+        }
     }
 };
 
 fn load_manager() -> CmdManager {
-    let read_path = String::from("./data/cmds.json");
-    match CmdManager::new(&read_path) {
+    let cmds_path = CONFIG.cmds_path();
+
+    match CmdManager::new(cmds_path) {
         Ok(m) => return m,
-        Err(err) => panic!("{:?}", err)
+        Err(_) => {
+            println!("\"{:?}\"不存在指令信息文件", cmds_path);
+            exit(1)
+        }
     }
 }
 

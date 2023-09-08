@@ -56,9 +56,6 @@ struct Args {
 
 // 程序运行函数
 pub fn run() {
-    // Config::load();
-
-
     // 1. 读取参数
     let args = Args::parse();
     // print!("{:?}", args);

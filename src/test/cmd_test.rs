@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use lazy_static::lazy_static;
 use crate::cmd::{
     command::CmdKind,
@@ -6,11 +7,11 @@ use crate::cmd::{
 };
 
 lazy_static! {
-    static ref TEST_CMD_FILE: String = String::from("./data/test/test_cmd.json");
-    static ref TEST_I_CMD_FILE: String = String::from("./data/test/test_i_cmd.json");
+    static ref TEST_CMD_FILE: PathBuf = PathBuf::from("./data/test/test_cmd.json");
+    static ref TEST_I_CMD_FILE: PathBuf = PathBuf::from("./data/test/test_i_cmd.json");
 }
 
-fn get_manager(data_path: &String) -> CmdManager{
+fn get_manager(data_path: &PathBuf) -> CmdManager{
     // let data_path = "./test_cmd.json".to_string();
     CmdManager::new(&data_path).unwrap()
 }

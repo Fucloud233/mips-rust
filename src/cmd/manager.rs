@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::File, io};
+use std::{collections::HashMap, fs::File, io, path::PathBuf};
 use super::{
     error::CompileErrorKind as CompileErrKind,
     command::{CmdKind, Cmd}
@@ -16,7 +16,7 @@ impl CmdManager {
     // 可能会遇到以下错误
     // 1. NotFound: 配置文件不存在
     // 2. InvalidData: 配置文件解析失败
-    pub fn new(cmd_file_path: &String) -> Result<Self, io::Error> {
+    pub fn new(cmd_file_path: &PathBuf) -> Result<Self, io::Error> {
         let read_result = read_commands(cmd_file_path)?;
 
         Ok(CmdManager { 
@@ -75,7 +75,7 @@ impl CmdManager {
 
 
 // https://www.qttc.net/509-rust-parse-json.html
-fn read_commands(path: &String) -> Result<HashMap<String, CmdKind>, io::Error> {
+fn read_commands(path: &PathBuf) -> Result<HashMap<String, CmdKind>, io::Error> {
     // 1. 打开文件
     let file_data = File::open(path)?;
 
