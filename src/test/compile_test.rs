@@ -46,7 +46,7 @@ fn hex_parse_test() {
 // 批量测试解析
 #[test]
 fn much_compile_test() {
-    let cmd_file_path = String::from("data/test/test1.cmd");
+    let cmd_file_path = String::from("data/test/test1.mips");
     let code_file_path = String::from("data/test/test1.code");
     
     // 编译代码
