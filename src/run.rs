@@ -4,7 +4,7 @@ use crate::{
     compile::compile,
     read::read_cmds,
     save::save_codes,
-    config::{CONFIG, SaveFormatType}
+    configure::{CONFIG, SaveFormatType}
 };
 
 // https://docs.rs/clap/latest/clap/

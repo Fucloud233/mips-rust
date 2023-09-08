@@ -1,5 +1,5 @@
 use std::{fs::File, io::Write};
-use crate::config::SaveFormatType;
+use crate::configure::SaveFormatType;
 
 // use lazy_static::lazy_static;
 // lazy_static! {

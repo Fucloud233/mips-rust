@@ -1,7 +1,7 @@
 
 use lazy_static::lazy_static;
 use serde::Deserialize;
-use std::{fs::File, env, io};
+use std::{fs::File, path::PathBuf, env, io};
 
 lazy_static! {
     pub static ref CONFIG: Config = Config::load().unwrap();
@@ -14,14 +14,16 @@ pub enum SaveFormatType {
 
 #[derive(Debug, Deserialize, PartialEq)]
 pub enum LanguageKind {
-    cn, en
+    CN, EN
 }
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
     language: LanguageKind,
     cmds_path: String,
-    default_save_format: SaveFormatType
+    default_save_format: SaveFormatType,
+    #[serde(skip)]
+    run_path: PathBuf
 }
 
 impl Config {
@@ -32,9 +34,16 @@ impl Config {
         path.push("config.json");
 
         // 解析数据并反序列化
-        let file_data = File::open(path)?;
+        let file_data = File::open(&path)?;
         let json_object: serde_json::Value = serde_json::from_reader(file_data)?;
-        let config: Config = serde_json::from_value(json_object)?;
+        let mut config: Config = serde_json::from_value(json_object)?;
+
+        
+        // 再处理
+        // if PathBuf::new(config.cmds_path) {
+
+        // };
+        config.run_path = path;
 
         Ok(config)
     }

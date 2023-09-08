@@ -9,15 +9,18 @@ mod run;
 mod compile;
 mod read;
 mod save;
+mod configure;
 
 #[cfg(test)]
 mod test {
     mod cmd_test;
     mod compile_test;
+    mod config_test;
 }
 
 use run::run;
 
 fn main() {
+
     run()
 }

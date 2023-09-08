@@ -2,6 +2,7 @@ use lazy_static::lazy_static;
 use crate::cmd::{
     manager::CmdManager,
     command::Cmd,
+    // config::CONFIG,
     error::{
         CompileErrorKind as CompileErrKind,
         CompileError as CompileErr
