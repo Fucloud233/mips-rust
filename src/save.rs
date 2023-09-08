@@ -17,7 +17,7 @@ fn save_as_logisim(codes: &Vec<u32>, file_path: &String) {
     }
 }
 
-fn save_as_plain(codes: &Vec<u32>, file_path: &String) {
+fn save_as_plain(_codes: &Vec<u32>, _file_path: &String) {
 } 
 
 

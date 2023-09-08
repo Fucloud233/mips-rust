@@ -24,6 +24,7 @@ pub enum LanguageKind {
 #[derive(Deserialize, Debug)]
 pub struct Config {
     // TODO: 后续可以支持中英多语言
+    #[serde(rename = "language")]
     _language: LanguageKind,
     default_save_format: SaveFormatType,
     // 指令信息存储路径

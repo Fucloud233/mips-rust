@@ -2,17 +2,19 @@ use std::{path::PathBuf, env};
 
 use crate::configure::{Config, LanguageKind, SaveFormatType};
 
+// test教程: https://kaisery.github.io/trpl-zh-cn/ch11-01-writing-tests.html
+// [注意] config读取是与可执行文件exe的位置有关的
+// 测试环境中的可执行文件位置: target\\debug\\deps
+
 #[test]
 fn read_config_test() {
-    // [注意] config读取是与运行位置的文件相关的
-    // 测试环境中的可执行文件位置: target\\debug\\deps\\
     let config: Config = Config::load().unwrap();
 
     // 生成正确值
     let language = LanguageKind::CN;
     let mut cmds_path = env::current_exe().unwrap();
     cmds_path.pop();
-    cmds_path.push("cmds_path.json");
+    cmds_path.push("cmds.json");
     let default_save_format = SaveFormatType::Logisim;
 
     // 验证参数是否读取正确
@@ -24,13 +26,8 @@ fn read_config_test() {
 #[test]
 fn path_parse_test() {
     let path = "data\\test";
-    
-    let mut pathBuf = PathBuf::new();
-    pathBuf.push("data");
-    pathBuf.push("test");
-
-    let path_buf_string = pathBuf.to_string_lossy();
+    let path_buf = PathBuf::from("data\\test");
+    let path_buf_string = path_buf.to_string_lossy();
 
     assert_eq!(path, path_buf_string)
-
 }

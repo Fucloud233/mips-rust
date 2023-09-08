@@ -18,8 +18,14 @@ fn load_manager() -> CmdManager {
     match CmdManager::new(cmds_path) {
         Ok(m) => return m,
         Err(_) => {
-            println!("\"{:?}\"不存在指令信息文件", cmds_path);
-            exit(1)
+            // 在测试环境中直接panic 非测试环境中exit
+            #[cfg(not(test))] 
+            {
+                eprintln!("指令信息文件 {:?} 不存在", cmds_path.file_name().unwrap());
+                exit(1);
+            }
+            #[cfg(test)]
+            panic!("cmd file not found!");
         }
     }
 }
