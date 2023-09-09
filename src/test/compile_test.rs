@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, path::PathBuf};
 
 use crate::compile::{parse_cmd, compile};
 use crate::read::read_cmds;
@@ -24,7 +24,7 @@ fn parse_hex_format(hex_format_text: &str) -> u32 {
 }
 
 // 读取编译后的机器指令
-fn read_codes(code_file_path: &String) -> Vec<u32> {
+fn read_codes(code_file_path: &PathBuf) -> Vec<u32> {
     let contents = fs::read_to_string(code_file_path).unwrap();
     let input_lines = contents.lines();
 
@@ -46,8 +46,8 @@ fn hex_parse_test() {
 // 批量测试解析
 #[test]
 fn much_compile_test() {
-    let cmd_file_path = String::from("data/test/test1.mips");
-    let code_file_path = String::from("data/test/test1.code");
+    let cmd_file_path = PathBuf::from("data/test/test1.mips");
+    let code_file_path = PathBuf::from("data/test/test1.code");
     
     // 编译代码
     let lines = read_cmds(&cmd_file_path).expect("读取失败");

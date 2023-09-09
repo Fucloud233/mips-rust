@@ -26,9 +26,13 @@ pub struct Config {
     // TODO: 后续可以支持中英多语言
     #[serde(rename = "language")]
     _language: LanguageKind,
-    default_save_format: SaveFormatType,
     // 指令信息存储路径
     cmds_path: PathBuf,
+    // 默认保存格式
+    default_save_format: SaveFormatType,
+    // 默认保存后缀
+    default_save_extension: String,
+
     // 程序的运行路径 (与工作路径不同)
     #[serde(skip)]
     run_path: PathBuf
@@ -68,6 +72,10 @@ impl Config {
 
     pub fn default_save_type(&self) -> &SaveFormatType {
         &self.default_save_format
+    }
+
+    pub fn default_save_extension(&self) -> &String {
+        &self.default_save_extension
     }
 }
 

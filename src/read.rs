@@ -1,8 +1,8 @@
-use std::{io, fs};
+use std::{io, fs, path::PathBuf};
 
 // 从文件中读取输入指令
 // 返回类型: 行号 + 行字符串的元组
-pub fn read_cmds(file_path: &String) -> Result<Vec<(usize, String)>, io::Error> {
+pub fn read_cmds(file_path: &PathBuf) -> Result<Vec<(usize, String)>, io::Error> {
     fn check_line(line: &String) -> bool {
         if line.is_empty() || line.starts_with("//") {
             false
