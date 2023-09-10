@@ -8,14 +8,14 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum CompileErrorKind {
-    #[error("指令\"{name:?}\"不存在")]
+    #[error("指令{name:?}不存在")]
     NameNotExist{name: String},
     #[error("操作数解析失败")]
     OperandParseError,
-    #[error("操作数应该有{expected:?}个, 但提供了{found:?}")]
+    #[error("操作数应该有{expected:?}个, 但提供了{found:?}个")]
     OperandNumError{expected: usize, found:usize},
-    #[error("操作数{operand:?}大小为{expected:?}位")]
-    OperandNumExcced{operand: Operand, expected: usize, found: usize}
+    #[error("操作数{operand:?}超出了给定大小({expected:?}位)")]
+    OperandNumExcced{operand: Operand, expected: usize}
 }
 
 #[derive(Debug)]
@@ -33,6 +33,10 @@ impl CompileError {
 
     pub fn kind(&self) -> &CompileErrorKind {
         &self.kind
+    }
+
+    pub fn line(&self) -> &usize {
+        &self.line
     }
 }
 

@@ -55,8 +55,7 @@ impl CmdManager {
                 return Some(CompileErrKind::OperandNumExcced { 
                     // FIXME: 这里是否要clone 还是修改引号
                     operand: operands[i].clone(), 
-                    expected: operands.len(), 
-                    found: nums.len() 
+                    expected: operands[i].info().length as usize,
                 })
             }
         }
