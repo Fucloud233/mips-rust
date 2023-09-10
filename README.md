@@ -61,6 +61,8 @@ mipsc source -o output -f format
 
 本程序使用Json文件管理配置信息，且目前仅支持MIPS架构中的I型指令和R型指令。本文件存储路径需要由上述配置文件指定。
 
+> 本程序已经录入了一些基本的指令信息，相信请查看[此处](docs/cmds.md)。
+
 ```json
 [
     {
