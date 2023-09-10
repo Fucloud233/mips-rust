@@ -9,6 +9,26 @@
 * `mipsc.exe`: 程序主体
 * `config.json`: 管理程序的一些关键配置信息
 * `cmds.json`: 存储本程序支持的指令信息
+* `example.mips`: 示例mips程序
+
+###  编写程序
+
+本程序使用自定义的MIPS汇编指令语法，大概形式为如下。每一条指令独占一行，第1个位指令名称，随后是操作数。本程序是大小写不敏感的，你不用担心大小写的事情。当然，你也可以使用`//`来添加注释。
+
+```
+// example
+cmd op1 op2 op3 ...
+```
+
+不过在你编程的时候，请注意一下几点：
+
+1. 本程序只能识别预定义的指令类型
+2. 请注意每条指令的操作数数量
+3. 每个操作数的大小有限制，超出时会报错
+
+如果你仍对此有疑惑，可以查看我们提供的示例代码`example.rs`。
+
+本程序目前已经支持的指令可以查看[此处](docs/cmds.md)。
 
 ### 运行程序
 
@@ -16,7 +36,7 @@
 
 > 配置系统环境变量：[教程](https://pengpengyang94.github.io/2020/05/win10%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%9B%BE%E6%96%87%E6%95%99%E7%A8%8B/)
 
-再配置好环境变量后，本程序的使用方法类似于c语言的编译gcc。
+在配置好环境变量后，本程序的使用方法类似于c语言的编译gcc。
 
 ```bat
 mipsc source -o output -f format
@@ -33,6 +53,14 @@ mipsc source -o output -f format
   logisim则按照该软件规定的读入格式输出，详情请见[此处](./docs/logisim_output_format.md)
 
   plain则以16进制明文格式输出
+
+---
+
+本程序提供示例文件`example.mips`，在该示例文件中打开cmd/powershell，并输入以下指令。如果你发现当前目录下生成了文件`example.dat`，那么恭喜你，你现在能够成功运行我们的程序了！
+
+```bat
+mipsc exaple.mips
+```
 
 ### 配置文件
 
@@ -60,8 +88,6 @@ mipsc source -o output -f format
 ### 指令信息
 
 本程序使用Json文件管理配置信息，且目前仅支持MIPS架构中的I型指令和R型指令。本文件存储路径需要由上述配置文件指定。
-
-> 本程序已经录入了一些基本的指令信息，相信请查看[此处](docs/cmds.md)。
 
 ```json
 [
