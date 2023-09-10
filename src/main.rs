@@ -14,6 +14,7 @@ mod configure;
 #[cfg(test)]
 mod test {
     mod cmd_test;
+    mod read_test;
     mod compile_test;
     mod config_test;
 }
